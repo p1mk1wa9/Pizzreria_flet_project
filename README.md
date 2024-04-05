@@ -1,4 +1,6 @@
 # Pizzreria_flet_project
-This repository created for Python project "Pizzeria" on framework flet on Python.
-No more go to pizzeria if you are busy. You can order pizza on your laptop.
-This project will be implemented on graphic framework "Flet" on Python. 
+This repository houses the Python project "Pizzeria" developed using the flet framework on Python.
+
+Now you can easily order pizza without having to go to a physical pizzeria, especially when you are busy.
+
+Enjoy the convenience of ordering your favorite pizza from the comfort of your own home with this project.
