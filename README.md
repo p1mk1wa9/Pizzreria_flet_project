@@ -13,6 +13,6 @@ With this project, you can easily order pizza and other types of food without ha
 
 I am using Python and graphic framework Flet. It will be implemented registration and sign in in your account.
 
-Creator's email - pimenov.ivan.2010@gmail.com;
+Creator's email - pimenov.ivan.2010@gmail.com
 
 Enjoy the quick and seamless experience of ordering your favorite meals with the Pizzeria project.
