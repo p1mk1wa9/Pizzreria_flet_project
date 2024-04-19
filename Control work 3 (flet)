@@ -1,0 +1,51 @@
+######УРОВЕНЬ С УРОВЕНЬ С УРОВЕНЬ С
+import flet as ft
+import json
+class Save:
+    def __init__(self):
+        self.tasks_class = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('tasksbase.json', 'r') as file:
+                tasks_class = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            tasks_class = []
+        return tasks_class
+
+    def save_data(self):
+        with open('tasksbase.json', 'w') as file:
+            json.dump(self.tasks_class, file)
+
+def main(page):
+    save = Save()
+    def add_clicked(e):
+        page.add(ft.Checkbox(label=new_task.value))
+        save.tasks_class.append(str(new_task.value))
+        save.save_data()
+        new_task.value = ""
+        new_task.focus()
+        new_task.update()
+
+    def remove_task(e):
+        save.tasks_class.remove(str(new_task.value))
+        save.save_data()
+
+    def change_task(e):
+        page.add(ft.Checkbox(label=change.value))
+        number = int(save.tasks_class.index(new_task.value))
+        save.tasks_class.insert(number, str(change.value))
+        save.tasks_class.remove(new_task.value)
+        save.save_data()
+        change.value = ""
+        change.update()
+
+
+
+    new_task = ft.TextField(hint_text="Что нужно сделать?", width=300)
+    change = ft.TextField(hint_text="Введите изменённую задачу", width=300)
+    page.add(ft.Row([new_task, ft.ElevatedButton("Добавить задачу", on_click=add_clicked)]))
+    page.add(ft.Row([change, ft.ElevatedButton("Изменить задачу на...", on_click=change_task)]))
+    page.add(ft.ElevatedButton("Удалить задачу", on_click=remove_task))
+
+ft.app(target=main)
