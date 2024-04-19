@@ -1,0 +1,66 @@
+import flet as ft
+import json
+class Save:
+    def __init__(self):
+        self.dataclass = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('database.json', 'r') as file:
+                dataclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dataclass = {}
+        return dataclass
+
+    def save_data(self):
+        with open('database.json', 'w') as file:
+            json.dump(self.dataclass, file)
+
+def main(page: ft.Page):
+    save = Save()
+
+    nick_name = ft.TextField(label="Nickname", autofocus=True)
+    password = ft.TextField(label="Password", password=True, can_reveal_password=True)
+    greetings = ft.Column()
+    nick_info = ft.TextField(label="Your nickname", read_only=True, visible=False, width=500)
+    password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=False, width=500)
+
+    def reg(e):
+        save.dataclass[nick_name.value] = password.value
+        save.save_data()
+        greetings.controls.append(ft.Text(f"You are registered as {nick_name.value}!"))
+        nick_name.value = ""
+        password.value = ""
+        page.update()
+        nick_name.focus()
+
+    def sign_in(e):
+        if nick_name.value in save.dataclass and save.dataclass[nick_name.value] == password.value:
+            greetings.controls.append(ft.Text(f"You are signed in as {nick_name.value}!"))
+            profile(e)
+            nick_info.value = str(nick_name.value)
+            password_info.value = str(password.value)
+        else:
+            greetings.controls.append(ft.Text("Incorrect nickname or password!"))
+            nick_name.value = ""
+            password.value = ""
+            nick_name.focus()
+        page.update()
+
+    def profile(e):
+        page.controls.clear()
+        nick_info.visible = True
+        password_info.visible = True
+        page.add(
+            nick_info,
+            password_info,
+        )
+    page.add(
+        nick_name,
+        password,
+        ft.ElevatedButton("Register?", on_click=reg),
+        ft.ElevatedButton("Sign in?", on_click=sign_in),
+        greetings,
+    )
+
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)
