@@ -1,5 +1,7 @@
 import flet as ft
 import json
+import pandas as pd
+
 class Save:
     def __init__(self):
         self.dataclass = self.load_data()
@@ -18,12 +20,13 @@ class Save:
 
 def main(page: ft.Page):
     save = Save()
+    sign_status = False
 
     nick_name = ft.TextField(label="Nickname", autofocus=True)
     password = ft.TextField(label="Password", password=True, can_reveal_password=True)
     greetings = ft.Column()
-    nick_info = ft.TextField(label="Your nickname", read_only=True, visible=False, width=500)
-    password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=False, width=500)
+    nick_info = ft.TextField(label="Your nickname", read_only=True, visible=True, width=500)
+    password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=True, width=500)
 
     def reg(e):
         save.dataclass[nick_name.value] = password.value
@@ -36,7 +39,6 @@ def main(page: ft.Page):
 
     def sign_in(e):
         if nick_name.value in save.dataclass and save.dataclass[nick_name.value] == password.value:
-            greetings.controls.append(ft.Text(f"You are signed in as {nick_name.value}!"))
             profile(e)
             nick_info.value = str(nick_name.value)
             password_info.value = str(password.value)
@@ -47,14 +49,91 @@ def main(page: ft.Page):
             nick_name.focus()
         page.update()
 
-    def profile(e):
+    def reg_menu(e):
+        global sign_status
+        sign_status = False
         page.controls.clear()
-        nick_info.visible = True
-        password_info.visible = True
+        page.add(
+            nick_name,
+            password,
+            ft.ElevatedButton("Register?", on_click=reg),
+            ft.ElevatedButton("Sign in?", on_click=sign_in),
+            greetings,
+        )
+        nick_name.value = ""
+        password.value = ""
+        greetings.controls.clear()
+        nick_name.focus()
+        page.update()
+
+    def sign_out(e):
+        reg_menu(e)
+
+    def food_menu(e):
+        page.controls.clear()
+        page.add(
+            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
+            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
+            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+        )
+        page.update()
+
+    def spec_food_pizza(e):
+        page.controls.clear()
+        page.add(
+            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
+            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
+            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+        )
+        margarita = ft.TextField(food_base.at[1, "name"], disabled=True)
+        mustard = ft.TextField(food_base.at[2, "name"], disabled=True)
+        classic = ft.TextField(food_base.at[3, "name"], disabled=True)
+        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), margarita, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), mustard, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), classic, ft.IconButton(ft.icons.ADD)]))
+        page.update()
+
+    def spec_food_sushi(e):
+        page.controls.clear()
+        page.add(
+            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
+            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
+            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+        )
+        philadelphia = ft.TextField(food_base.at[4, "name"], disabled=True)
+        california = ft.TextField(food_base.at[5, "name"], disabled=True)
+        lava = ft.TextField(food_base.at[6, "name"], disabled=True)
+        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), philadelphia, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), california, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), lava, ft.IconButton(ft.icons.ADD)]))
+        page.update()
+
+
+    def spec_food_drinks(e):
+        page.controls.clear()
+        page.add(
+            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
+            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
+            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+        )
+        cola = ft.TextField(food_base.at[7, "name"], disabled=True)
+        tea = ft.TextField(food_base.at[8, "name"], disabled=True)
+        water = ft.TextField(food_base.at[9, "name"], disabled=True)
+        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), cola, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), tea, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), water, ft.IconButton(ft.icons.ADD)]))
+        page.update()
+
+    food_base = pd.read_csv("Food_base.csv", delimiter=";", names=["name", "type", "id", "price"])
+
+    def profile(e):
+        global sign_status
+        sign_status = True
+        page.controls.clear()
         page.add(
             nick_info,
             password_info,
+            ft.ElevatedButton("Sign out?", on_click=sign_out),
+            ft.ElevatedButton("Go to food menu?", on_click=food_menu),
+            greetings,
         )
+        greetings.controls.append(ft.Text(f"You are signed in as {nick_name.value}!"))
+        page.update()
+
     page.add(
         nick_name,
         password,
@@ -62,5 +141,4 @@ def main(page: ft.Page):
         ft.ElevatedButton("Sign in?", on_click=sign_in),
         greetings,
     )
-
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
