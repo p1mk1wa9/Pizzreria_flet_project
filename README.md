@@ -2,6 +2,8 @@
 
 This repository contains the "Pizzeria" Python project developed using the Flet framework.
 
+I'm using: Python, PyCharm, Flet, Pandas, Json.
+
 With this project, you can easily order pizza and other types of food without having to go to a physical pizzeria, especially when you are busy. Enjoy the convenience of ordering your favorite food from the comfort of your own home.
 
 ## Features
