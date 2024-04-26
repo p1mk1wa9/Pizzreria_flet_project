@@ -1,0 +1,301 @@
+import flet as ft
+
+def shelters(page: ft.Page):
+    img = ft.Image(
+        src=f"https://i.otzovik.com/objects/b/1200000/1192539.png",
+        width=220,
+        height=220,
+        fit=ft.ImageFit.CONTAIN,
+    )
+
+    img2 = ft.Image(
+        src=f"https://avatars.mds.yandex.net/get-altay/3933982/2a00000175d47c9330f32c7061582117dbb6/XXL_height",
+
+        width=270,
+        height=280,
+        fit=ft.ImageFit.CONTAIN,
+    )
+    shelter_verny = ft.Text(f'Приют "Верный"', size=15, weight=ft.FontWeight.W_600)
+    shelter_road = ft.Text(f'Приют "Дорога домой"', size=15, weight=ft.FontWeight.W_600)
+    donate_food = ft.TextField(label="Пожертвование на еду", width=500)
+    donate_toys = ft.TextField(label="Пожертвование на игрушки", width=500)
+
+    def donate(shelter):
+        page.add(ft.Text(value=f"Спасибо за пожертвование в фонд {shelter.value}"))
+
+    def don(e):
+        page.controls.clear()
+        page.add(
+            ft.IconButton(
+                icon=ft.icons.CHECK_CIRCLE,
+                on_click=lambda e: donate(shelter_verny)
+            ),
+            donate_food,
+            donate_toys,
+            ft.IconButton(
+                icon=ft.icons.CHECK_CIRCLE,
+                on_click=lambda e: donate(shelter_verny)
+            )
+        )
+
+    def don1(e):
+        page.controls.clear()
+        page.add(
+            ft.IconButton(
+                icon=ft.icons.CHECK_CIRCLE,
+                on_click=lambda e: donate(shelter_road)
+            ),
+            donate_food,
+            donate_toys,
+            ft.IconButton(
+                icon=ft.icons.CHECK_CIRCLE,
+                on_click=lambda e: donate(shelter_road)
+            )
+        )
+
+    img = ft.Image(
+        src=f"https://i.otzovik.com/objects/b/1200000/1192539.png",
+        width=220,
+        height=220,
+        fit=ft.ImageFit.CONTAIN,
+    )
+
+    img2 = ft.Image(
+        src=f"https://avatars.mds.yandex.net/get-altay/3933982/2a00000175d47c9330f32c7061582117dbb6/XXL_height",
+
+        width=270,
+        height=280,
+        fit=ft.ImageFit.CONTAIN,
+    )
+
+    def dogs_lists(e):
+        page.clean()
+        page.add(
+            ft.Row([ft.CircleAvatar(ft.CupertinoContextMenu(
+                enable_haptic_feedback=True,
+                content=ft.Image("https://avatars.mds.yandex.net/get-entity_search/937587/877439466/S122x122Smart_2x"),
+                actions=[
+                    ft.CupertinoContextMenuAction(
+                        text="Прогуляться",
+                        is_default_action=True,
+                        trailing_icon=ft.icons.FMD_GOOD,
+                        on_click=lambda e: print("Action 1"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Тест-драйв",
+                        trailing_icon=ft.icons.AUTO_MODE,
+                        on_click=lambda e: print("Action 2"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Забрать",
+                        is_destructive_action=True,
+                        trailing_icon=ft.icons.HOME,
+                        on_click=lambda e: print("Action 3"),
+                    ),
+                ],
+            ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Белый.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Лабрадоры используются на охоте, в качестве собак-поводырей, собак-спасателей, но главным образом в роли компаньонов.'),
+
+                ])]), ft.Column([ft.Text(' ')]),
+            ft.Row([ft.CircleAvatar(ft.CupertinoContextMenu(
+                enable_haptic_feedback=True,
+                content=ft.Image("https://avatars.mds.yandex.net/get-entity_search/1540656/806578245/S122x122Smart_2x"),
+                actions=[
+                    ft.CupertinoContextMenuAction(
+                        text="Прогуляться",
+                        is_default_action=True,
+                        trailing_icon=ft.icons.FMD_GOOD,
+                        on_click=lambda e: print("Action 1"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Тест-драйв",
+                        trailing_icon=ft.icons.AUTO_MODE,
+                        on_click=lambda e: print("Action 2"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Забрать",
+                        is_destructive_action=True,
+                        trailing_icon=ft.icons.HOME,
+                        on_click=lambda e: print("Action 3"),
+                    ),
+                ],
+            ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Мега Бобик.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Это аборигенная порода, не являющаяся результатом планомерного отбора. \nИсторически используется среднеазиатскими народами и чабанами для охраны скота.'),
+                ])]), ft.Column([ft.Text(' ')]),
+            ft.Row([
+                ft.CircleAvatar(ft.CupertinoContextMenu(
+                    enable_haptic_feedback=True,
+                    content=ft.Image(
+                        "https://avatars.mds.yandex.net/get-entity_search/5503081/777345428/S122x122Smart_2x"),
+                    actions=[
+                        ft.CupertinoContextMenuAction(
+                            text="Прогуляться",
+                            is_default_action=True,
+                            trailing_icon=ft.icons.FMD_GOOD,
+                            on_click=lambda e: print("Action 1"),
+                        ),
+                        ft.CupertinoContextMenuAction(
+                            text="Тест-драйв",
+                            trailing_icon=ft.icons.AUTO_MODE,
+                            on_click=lambda e: print("Action 2"),
+                        ),
+                        ft.CupertinoContextMenuAction(
+                            text="Забрать",
+                            is_destructive_action=True,
+                            trailing_icon=ft.icons.HOME,
+                            on_click=lambda e: print("Action 3"),
+                        ),
+                    ],
+                ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Чувырло.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Бультерьеры весьма доброжелательны и преданны, если их правильно воспитать. \nЭти собаки чрезмерно активны и нуждаются в регулярных физических нагрузках, где они смогут выплеснуть свою энергию.'),
+                ])]))
+
+    def dogs_list(e):
+        page.clean()
+        page.add(
+
+            ft.Row([ft.CircleAvatar(ft.CupertinoContextMenu(
+                enable_haptic_feedback=True,
+                content=ft.Image("https://avatars.mds.yandex.net/get-entity_search/2102351/886036195/S122x122Smart_2x"),
+                actions=[
+                    ft.CupertinoContextMenuAction(
+                        text="Прогуляться",
+                        is_default_action=True,
+                        trailing_icon=ft.icons.FMD_GOOD,
+                        on_click=lambda e: print("Action 1"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Тест-драйв",
+                        trailing_icon=ft.icons.AUTO_MODE,
+                        on_click=lambda e: print("Action 2"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Забрать",
+                        is_destructive_action=True,
+                        trailing_icon=ft.icons.HOME,
+                        on_click=lambda e: print("Action 3"),
+                    ),
+                ],
+            ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Бобик.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Это собака среднего размера с типичным обликом гончей. \nБигли обладают хорошим обонянием и используются прежде всего для охоты на кроликов и зайцев.'),
+
+                ])]), ft.Column([ft.Text(' ')]),
+            ft.Row([ft.CircleAvatar(ft.CupertinoContextMenu(
+                enable_haptic_feedback=True,
+                content=ft.Image("https://avatars.mds.yandex.net/get-entity_search/1554108/877776638/S122x122Smart_2x"),
+                actions=[
+                    ft.CupertinoContextMenuAction(
+                        text="Прогуляться",
+                        is_default_action=True,
+                        trailing_icon=ft.icons.FMD_GOOD,
+                        on_click=lambda e: print("Action 1"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Тест-драйв",
+                        trailing_icon=ft.icons.AUTO_MODE,
+                        on_click=lambda e: print("Action 2"),
+                    ),
+                    ft.CupertinoContextMenuAction(
+                        text="Забрать",
+                        is_destructive_action=True,
+                        trailing_icon=ft.icons.HOME,
+                        on_click=lambda e: print("Action 3"),
+                    ),
+                ],
+            ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Китайц.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Это самая мелкая из шести пород исконно японского происхождения. \nВ 1936 году сиба-ину была объявлена национальным достоянием Японии, где основное поголовье этих собак находится в деревнях.'),
+                ])]), ft.Column([ft.Text(' ')]),
+            ft.Row([
+                ft.CircleAvatar(ft.CupertinoContextMenu(
+                    enable_haptic_feedback=True,
+                    content=ft.Image(
+                        "https://avatars.mds.yandex.net/get-entity_search/96437/779608743/S122x122Smart_2x"),
+                    actions=[
+                        ft.CupertinoContextMenuAction(
+                            text="Прогуляться",
+                            is_default_action=True,
+                            trailing_icon=ft.icons.FMD_GOOD,
+                            on_click=lambda e: print("Action 1"),
+                        ),
+                        ft.CupertinoContextMenuAction(
+                            text="Тест-драйв",
+                            trailing_icon=ft.icons.AUTO_MODE,
+                            on_click=lambda e: print("Action 2"),
+                        ),
+                        ft.CupertinoContextMenuAction(
+                            text="Забрать",
+                            is_destructive_action=True,
+                            trailing_icon=ft.icons.HOME,
+                            on_click=lambda e: print("Action 3"),
+                        ),
+                    ],
+                ), radius=70),
+                ft.Column([
+                    ft.Text('Это - Добермэн.', theme_style=ft.TextThemeStyle.LABEL_LARGE),
+
+                    ft.Text(
+                        'Доберманы отличаются активным, энергичным характером, склонны к проявлению агрессии. \nОбладают выраженным охранным инстинктом, как территориальным, так и направленным на охрану человека.'),
+                ])]))
+
+    page.add(ft.Row([ft.Row(
+        [
+            img, ]
+    ),
+        ft.Row(
+            [ft.Column([
+                ft.Row(
+                    [ft.Text('     '), ft.Text(f'Приют "Верный"', size=15, weight=ft.FontWeight.W_600), ]),
+                ft.Row([
+                    ft.Container(ft.Text("")), ]),
+                ft.Row([
+                    ft.Text(f'Адрес:', theme_style=ft.TextThemeStyle.TITLE_SMALL), ft.Text('ул. 40 лет Октября'),
+                ]),
+                ft.Row([
+                    ft.Text('Ссылка на ВК:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
+                    ft.TextButton('Тут', url='https://vk.com/priyut42?ysclid=lvg8phd67i799200002')
+                ]),
+                ft.TextButton(text='Подробнее', on_click=dogs_lists),
+                ft.TextButton(text='Донат', on_click=don)
+            ])], alignment=ft.MainAxisAlignment.START),
+
+        ft.Row(
+            [
+                img2, ], alignment=ft.MainAxisAlignment.CENTER
+        ),
+        ft.Row(
+            [ft.Column([
+                ft.Row(
+                    [ft.Text('     '), ft.Text(f'Приют "Верный"', size=15, weight=ft.FontWeight.W_600), ]),
+                ft.Row([
+                    ft.Container(ft.Text("История как я попал в постапакалипсис")), ]),
+                ft.Row([
+                    ft.Text(f'Адрес:', theme_style=ft.TextThemeStyle.TITLE_SMALL), ft.Text('ул. 40 лет Октября'),
+                ]),
+                ft.Row([
+                    ft.Text('Ссылка на ВК:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
+                    ft.TextButton('Тут', url='https://vk.com/priyut42?ysclid=lvg8phd67i799200002')
+                ]),
+                ft.TextButton(text='Подробнее', on_click=dogs_list),
+                ft.TextButton(text='Донат', on_click=don1)
+            ])], alignment=ft.MainAxisAlignment.CENTER)]))
+    page.update()
