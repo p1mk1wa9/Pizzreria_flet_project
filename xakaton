@@ -12,7 +12,7 @@ class Save:
 
     def load_data(self):
         try:
-            with open('shelterbase.json', 'r') as file:
+            with open('imagebase.json', 'r') as file:
                 dataclass = json.load(file)
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             dataclass = {}
@@ -22,10 +22,27 @@ class Save:
         for data in self.shelterdata:
             if isinstance(data, ft.Image):
                 self.shelterdata[data] = data.src
-        with open('shelterbase.json', 'w') as file:
+        with open('imagebase.json', 'w') as file:
             json.dump(self.shelterdata, file)
 
+class SaveText:
+    def __init__(self):
+        self.textdata = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('shelterbase.json', 'r') as file:
+                textclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            textclass = {}
+        return textclass
+
+    def save_data(self):
+        with open('shelterbase.json', 'w+') as file:
+            json.dump(self.textdata, file)
+
 save = Save()
+save_text = SaveText()
 def shelters(page: ft.Page):
     shelter_verny = ft.Text(f'Приют "Верный"', size=15, weight=ft.FontWeight.W_600)
     shelter_road = ft.Text(f'Приют "Дорога домой"', size=15, weight=ft.FontWeight.W_600)
@@ -310,9 +327,17 @@ def shelters(page: ft.Page):
                 ft.TextButton(text='Подробнее', on_click=dogs_list),
                 ft.TextButton(text='Донат', on_click=don1)
             ])], alignment=ft.MainAxisAlignment.CENTER)]))
-    for data in save.shelterdata:
-        page.add(ft.Text(f"{data}: {save.shelterdata[data]}"))
-    page.update()
+
+    page.add(ft.Image(save.shelterdata["img_shelter"]))
+    for data in save_text.textdata:
+        page.add(ft.Row([
+            save_text.textdata[data]['img_shelter'],  # Добавляем объект ft.Image
+            ft.Column([
+                ft.Text(f"{data}: {save_text.textdata[data]['name_shelter']}"),
+                ft.Text(f"Адрес: {save_text.textdata[data]['adress_shelter']}"),
+                # ...
+            ])
+        ]))
 
 def admin(page:ft.Page):
     name_shelter = ft.TextField(label="Введите название нового приюта")
