@@ -1,20 +1,32 @@
 import flet as ft
+import random
+import calendar
+from datetime import date, timedelta
+import F
+import admin_panel
+import json
 
+class Save:
+    def __init__(self):
+        self.shelterdata = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('shelterbase.json', 'r') as file:
+                dataclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dataclass = {}
+        return dataclass
+
+    def save_data(self):
+        for data in self.shelterdata:
+            if isinstance(data, ft.Image):
+                self.shelterdata[data] = data.src
+        with open('shelterbase.json', 'w') as file:
+            json.dump(self.shelterdata, file)
+
+save = Save()
 def shelters(page: ft.Page):
-    img = ft.Image(
-        src=f"https://i.otzovik.com/objects/b/1200000/1192539.png",
-        width=220,
-        height=220,
-        fit=ft.ImageFit.CONTAIN,
-    )
-
-    img2 = ft.Image(
-        src=f"https://avatars.mds.yandex.net/get-altay/3933982/2a00000175d47c9330f32c7061582117dbb6/XXL_height",
-
-        width=270,
-        height=280,
-        fit=ft.ImageFit.CONTAIN,
-    )
     shelter_verny = ft.Text(f'Приют "Верный"', size=15, weight=ft.FontWeight.W_600)
     shelter_road = ft.Text(f'Приют "Дорога домой"', size=15, weight=ft.FontWeight.W_600)
     donate_food = ft.TextField(label="Пожертвование на еду", width=500)
@@ -79,18 +91,18 @@ def shelters(page: ft.Page):
                         text="Прогуляться",
                         is_default_action=True,
                         trailing_icon=ft.icons.FMD_GOOD,
-                        on_click=lambda e: print("Action 1"),
+                        on_click=lambda e: F.go(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Тест-драйв",
                         trailing_icon=ft.icons.AUTO_MODE,
-                        on_click=lambda e: print("Action 2"),
+                        on_click=lambda e: F.test(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Забрать",
                         is_destructive_action=True,
                         trailing_icon=ft.icons.HOME,
-                        on_click=lambda e: print("Action 3"),
+                        on_click=lambda e: F.home1(page),
                     ),
                 ],
             ), radius=70),
@@ -109,18 +121,18 @@ def shelters(page: ft.Page):
                         text="Прогуляться",
                         is_default_action=True,
                         trailing_icon=ft.icons.FMD_GOOD,
-                        on_click=lambda e: print("Action 1"),
+                        on_click=lambda e: F.go(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Тест-драйв",
                         trailing_icon=ft.icons.AUTO_MODE,
-                        on_click=lambda e: print("Action 2"),
+                        on_click=lambda e: F.test(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Забрать",
                         is_destructive_action=True,
                         trailing_icon=ft.icons.HOME,
-                        on_click=lambda e: print("Action 3"),
+                        on_click=lambda e: F.home1(page),
                     ),
                 ],
             ), radius=70),
@@ -140,18 +152,18 @@ def shelters(page: ft.Page):
                             text="Прогуляться",
                             is_default_action=True,
                             trailing_icon=ft.icons.FMD_GOOD,
-                            on_click=lambda e: print("Action 1"),
+                            on_click=lambda e: F.go(page),
                         ),
                         ft.CupertinoContextMenuAction(
                             text="Тест-драйв",
                             trailing_icon=ft.icons.AUTO_MODE,
-                            on_click=lambda e: print("Action 2"),
+                            on_click=lambda e: F.test(page),
                         ),
                         ft.CupertinoContextMenuAction(
                             text="Забрать",
                             is_destructive_action=True,
                             trailing_icon=ft.icons.HOME,
-                            on_click=lambda e: print("Action 3"),
+                            on_click=lambda e: F.home1(page),
                         ),
                     ],
                 ), radius=70),
@@ -174,18 +186,18 @@ def shelters(page: ft.Page):
                         text="Прогуляться",
                         is_default_action=True,
                         trailing_icon=ft.icons.FMD_GOOD,
-                        on_click=lambda e: print("Action 1"),
+                        on_click=lambda e: F.go(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Тест-драйв",
                         trailing_icon=ft.icons.AUTO_MODE,
-                        on_click=lambda e: print("Action 2"),
+                        on_click=lambda e: F.test(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Забрать",
                         is_destructive_action=True,
                         trailing_icon=ft.icons.HOME,
-                        on_click=lambda e: print("Action 3"),
+                        on_click=lambda e: F.home1(page),
                     ),
                 ],
             ), radius=70),
@@ -204,18 +216,18 @@ def shelters(page: ft.Page):
                         text="Прогуляться",
                         is_default_action=True,
                         trailing_icon=ft.icons.FMD_GOOD,
-                        on_click=lambda e: print("Action 1"),
+                        on_click=lambda e: F.go(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Тест-драйв",
                         trailing_icon=ft.icons.AUTO_MODE,
-                        on_click=lambda e: print("Action 2"),
+                        on_click=lambda e: F.test(page),
                     ),
                     ft.CupertinoContextMenuAction(
                         text="Забрать",
                         is_destructive_action=True,
                         trailing_icon=ft.icons.HOME,
-                        on_click=lambda e: print("Action 3"),
+                        on_click=lambda e: F.home1(page),
                     ),
                 ],
             ), radius=70),
@@ -235,18 +247,18 @@ def shelters(page: ft.Page):
                             text="Прогуляться",
                             is_default_action=True,
                             trailing_icon=ft.icons.FMD_GOOD,
-                            on_click=lambda e: print("Action 1"),
+                            on_click=lambda e: F.go(page),
                         ),
                         ft.CupertinoContextMenuAction(
                             text="Тест-драйв",
                             trailing_icon=ft.icons.AUTO_MODE,
-                            on_click=lambda e: print("Action 2"),
+                            on_click=lambda e: F.test(page),
                         ),
                         ft.CupertinoContextMenuAction(
                             text="Забрать",
                             is_destructive_action=True,
                             trailing_icon=ft.icons.HOME,
-                            on_click=lambda e: print("Action 3"),
+                            on_click=lambda e: F.home1(page),
                         ),
                     ],
                 ), radius=70),
@@ -298,4 +310,45 @@ def shelters(page: ft.Page):
                 ft.TextButton(text='Подробнее', on_click=dogs_list),
                 ft.TextButton(text='Донат', on_click=don1)
             ])], alignment=ft.MainAxisAlignment.CENTER)]))
+    for data in save.shelterdata:
+        page.add(ft.Text(f"{data}: {save.shelterdata[data]}"))
     page.update()
+
+def admin(page:ft.Page):
+    name_shelter = ft.TextField(label="Введите название нового приюта")
+    adress_shelter = ft.TextField(label="Введите адрес нового приюта")
+    adress_img = ft.TextField(label="Вставьте путь до фотографии для нового приюта")
+
+    def add_shelter(e):
+        img_shelter = ft.Image(src=adress_img.value, width=220, height=220, fit=ft.ImageFit.CONTAIN)
+        page.add(ft.Row([ft.Row(
+            [
+                img_shelter,
+            ],
+        ),
+            ft.Row(
+                [ft.Column([
+                    ft.Row(
+                        [ft.Text('     '), ft.Text(name_shelter.value), ]),
+                    ft.Row([
+                        ft.Container(ft.Text("")),
+                    ]),
+                    ft.Row([
+                        ft.Text(f'Адрес:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
+                        ft.Text(adress_shelter.value),
+                    ]),
+                    # ft.TextButton(text='Подробнее', on_click=dogs_lists),
+                    # ft.TextButton(text='Донат', on_click=don)
+                ], alignment=ft.MainAxisAlignment.START),  # Закрываем список в ft.Column
+                ], alignment=ft.MainAxisAlignment.SPACE_EVENLY),  # Закрываем список в ft.Row
+        ]))  # Закрываем список в ft.Row и функцию add_shelter
+
+        # Save the necessary data to shelterdata
+        save.shelterdata = {
+            "img_shelter": adress_img.value,
+            "name_shelter": name_shelter.value,
+            "adress_shelter": adress_shelter.value
+        }
+        save.save_data()
+
+    page.add(name_shelter, adress_shelter, adress_img, ft.IconButton(icon=ft.icons.ADD, on_click=add_shelter))
