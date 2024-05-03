@@ -1,0 +1,27 @@
+import pandas as pd
+
+food_base = pd.read_csv("Food_base.csv", delimiter=";", names=["name", "type", "id", "price", "variable", "image"])
+
+marg_img = f"https://w7.pngwing.com/pngs/400/449/png-transparent-pizza-margherita-italian-cuisine-focaccia-new-york-style-pizza-pizza-ingredient-food-cheese-tomato.png"
+must_img = f"https://media.leverans.ru/product_images_inactive/krasnoiarsk/papa-dzhons-2/0bcb87fdbf3092be7ab1ef9e74c3887f_1.jpg"
+clas_img = f"https://www.chefmarket.ru/blog/wp-content/uploads/2021/08/delicious-grilled-eggplant-pizza-1-300x199.jpg"
+
+phil_img = f"https://mykaleidoscope.ru/x/uploads/posts/2022-09/1663708121_46-mykaleidoscope-ru-p-roll-filadelfiya-lait-yeda-oboi-52.jpg"
+cali_img = f"https://amenu.ru/images/e.497b6765d5927bfa21e995d0a05ee1eb.jpg"
+lava_img = f"https://static.tildacdn.com/tild6136-3062-4135-b137-633165366336/__2.jpg"
+
+cola_img = f"https://mashed.com/img/gallery/the-mexican-church-that-burps-away-evil-with-coca-cola/l-intro-1668129423.jpg"
+tea_img = f"https://www.hindmadetree.com/wp-content/uploads/2017/01/tea-08.jpg"
+water_img = f"https://twitnow.ru/wp-content/uploads/2022/08/9820221433.jpg"
+
+marg_dict = {"Фото": marg_img, "Название": food_base.at[1, "name"], "Состав": 'Помидоры, соус, сыр "Моцарелла"', "Цена": int(food_base.at[1, "price"])}
+must_dict = {"Фото": must_img, "Название": food_base.at[2, "name"], "Состав": 'Помидоры, соус горчичный, сыр "Моцарелла", куриная грудка, лук', "Цена": food_base.at[2, "price"]}
+clas_dict = {"Фото": clas_img, "Название": food_base.at[3, "name"], "Состав": 'Помидоры, соус, сыр "Моцарелла", колбаса, ветчина, оливки', "Цена": food_base.at[3, "price"]}
+
+phil_dict = {"Фото": phil_img, "Название": food_base.at[4, "name"], "Состав": 'Рис, нори, сыр филадельфия, свежий лосось', "Цена": food_base.at[4, "price"]}
+cali_dict = {"Фото": cali_img, "Название": food_base.at[5, "name"], "Состав": 'Рис, нори, огурец, краб-крем, икра мойвы масаго', "Цена": food_base.at[5, "price"]}
+lava_dict = {"Фото": lava_img, "Название": food_base.at[6, "name"], "Состав": 'Рис, сыр сливочный, краб, соус лава', "Цена": food_base.at[6, "price"]}
+
+cola_dict = {"Фото": cola_img, "Название": food_base.at[7, "name"], "Состав": 'Вода, сахар, сок лайма, краситель, регулятор кислотности, ароматизатор, кофеин', "Цена": food_base.at[7, "price"]}
+tea_dict = {"Фото": tea_img, "Название": food_base.at[8, "name"], "Состав": 'Заварка, мята, темьян, апельсин, имбирь', "Цена": food_base.at[8, "price"]}
+water_dict = {"Фото": water_img, "Название": food_base.at[9, "name"], "Состав": 'Вода', "Цена": food_base.at[9, "price"]}
