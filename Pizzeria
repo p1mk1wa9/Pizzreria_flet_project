@@ -1,6 +1,6 @@
 import flet as ft
 import json
-import pandas as pd
+import food_data
 
 class Save:
     def __init__(self):
@@ -18,6 +18,7 @@ class Save:
         with open('database.json', 'w') as file:
             json.dump(self.dataclass, file)
 
+food_box = {}
 def main(page: ft.Page):
     save = Save()
     sign_status = False
@@ -27,6 +28,7 @@ def main(page: ft.Page):
     greetings = ft.Column()
     nick_info = ft.TextField(label="Your nickname", read_only=True, visible=True, width=500)
     password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=True, width=500)
+
 
     def reg(e):
         save.dataclass[nick_name.value] = password.value
@@ -72,53 +74,58 @@ def main(page: ft.Page):
     def food_menu(e):
         page.controls.clear()
         page.add(
-            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
-            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
-            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+            ft.ElevatedButton("Pizza", on_click=lambda e: spec_food(pizza_list)),
+            ft.ElevatedButton("Sushi", on_click=lambda e: spec_food(sushi_list)),
+            ft.ElevatedButton("Drinks", on_click=lambda e: spec_food(drinks_list)),
         )
         page.update()
 
-    def spec_food_pizza(e):
+    def spec_food(food_list):
+        page.controls.clear()
+        for food in food_list:
+            page.add(food)
+        page.update()
+
+    food_price = ft.TextField("0", read_only=True)
+
+    def plus_food(food_dict):
+        global food_box
+        food_box["Название"] = food_dict.get("Название")
+        food_box["Цена"] = food_dict.get("Цена")
+        food_price.value = str(int(food_price.value) + int(food_dict.get("Цена")))
+        print(food_price.value)
+        print(food_box)
+        page.update()
+
+
+    def minus_food(food_dict, food_price):
+        if int(food_price.value) > 0:
+            food_price.value = str(int(food_price.value) - int(food_dict.get("Цена")))
+
+
+    def food_cart(e):
         page.controls.clear()
         page.add(
-            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
-            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
-            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
+            food_price,
+            ft.ElevatedButton("Оформить заказ", on_click=lambda e:page.add(ft.Text("Списано" + food_price.value + "руб")))
         )
-        margarita = ft.TextField(food_base.at[1, "name"], disabled=True)
-        mustard = ft.TextField(food_base.at[2, "name"], disabled=True)
-        classic = ft.TextField(food_base.at[3, "name"], disabled=True)
-        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), margarita, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), mustard, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), classic, ft.IconButton(ft.icons.ADD)]))
-        page.update()
-
-    def spec_food_sushi(e):
-        page.controls.clear()
-        page.add(
-            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
-            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
-            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
-        )
-        philadelphia = ft.TextField(food_base.at[4, "name"], disabled=True)
-        california = ft.TextField(food_base.at[5, "name"], disabled=True)
-        lava = ft.TextField(food_base.at[6, "name"], disabled=True)
-        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), philadelphia, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), california, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), lava, ft.IconButton(ft.icons.ADD)]))
         page.update()
 
 
-    def spec_food_drinks(e):
-        page.controls.clear()
-        page.add(
-            ft.ElevatedButton("Pizza", on_click=spec_food_pizza),
-            ft.ElevatedButton("Sushi", on_click=spec_food_sushi),
-            ft.ElevatedButton("Drinks", on_click=spec_food_drinks),
-        )
-        cola = ft.TextField(food_base.at[7, "name"], disabled=True)
-        tea = ft.TextField(food_base.at[8, "name"], disabled=True)
-        water = ft.TextField(food_base.at[9, "name"], disabled=True)
-        page.add(ft.Row([ft.IconButton(ft.icons.REMOVE), cola, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), tea, ft.IconButton(ft.icons.ADD), ft.IconButton(ft.icons.REMOVE), water, ft.IconButton(ft.icons.ADD)]))
-        page.update()
+    def food_description(food_dict):
+        page.clean()
+        img = ft.Image(src=str(food_dict.get("Фото")), width=500, height=500, fit=ft.ImageFit.CONTAIN)
+        page.add(ft.Container(ft.Row([
+            img,
+            ft.Text("Название"), ft.Text(food_dict.get("Название")),
+            ft.Text("Состав"), ft.Text(food_dict.get("Состав")),
+            ft.Text("Цена"), ft.Text(food_dict.get("Цена")),
+            ft.IconButton(icon=ft.icons.REMOVE, on_click= lambda e: minus_food(food_dict, food_price)), ft.IconButton(icon=ft.icons.ADD, on_click= lambda e: plus_food(food_dict))
+        ])))
 
-    food_base = pd.read_csv("Food_base.csv", delimiter=";", names=["name", "type", "id", "price"])
+    pizza_list = [ft.ElevatedButton("Маргарита", on_click=lambda e: food_description(food_data.marg_dict)), ft.ElevatedButton("Горчичная", on_click=lambda e: food_description(food_data.must_dict)), ft.ElevatedButton("Классическая", on_click=lambda e: food_description(food_data.clas_dict))]
+    sushi_list = [ft.ElevatedButton("Филадельфия", on_click=lambda e: food_description(food_data.phil_dict)), ft.ElevatedButton("Калифорния", on_click=lambda e: food_description(food_data.cali_dict)), ft.ElevatedButton("Лава", on_click=lambda e: food_description(food_data.lava_dict))]
+    drinks_list = [ft.ElevatedButton("Кола", on_click=lambda e: food_description(food_data.cola_dict)), ft.ElevatedButton("Чай", on_click=lambda e: food_description(food_data.tea_dict)), ft.ElevatedButton("Вода", on_click=lambda e: food_description(food_data.water_dict))]
 
     def profile(e):
         global sign_status
@@ -128,8 +135,32 @@ def main(page: ft.Page):
             nick_info,
             password_info,
             ft.ElevatedButton("Sign out?", on_click=sign_out),
-            ft.ElevatedButton("Go to food menu?", on_click=food_menu),
             greetings,
+        )
+
+        def on_destination_click(e):
+            index = page.navigation_bar.selected_index
+            if index == 0:
+                profile(e)
+                page.update()
+            elif index == 1:
+                page.controls.clear()
+                food_menu(e)
+                page.update()
+            elif index == 2:
+                food_cart(e)
+                page.update()
+
+
+            greetings.controls.clear()
+            page.update()
+        page.navigation_bar = ft.NavigationBar(
+            on_change=on_destination_click,
+            destinations=[
+                ft.NavigationDestination(icon=ft.icons.ACCOUNT_CIRCLE, label="Аккаунт"),
+                ft.NavigationDestination(icon=ft.icons.FLATWARE, label="Заказать еду"),
+                ft.NavigationDestination(icon=ft.icons.SHOPPING_CART, label="Корзина"),
+            ]
         )
         greetings.controls.append(ft.Text(f"You are signed in as {nick_name.value}!"))
         page.update()
