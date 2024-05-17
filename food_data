@@ -25,3 +25,5 @@ lava_dict = {"Фото": lava_img, "Название": food_base.at[6, "name"], 
 cola_dict = {"Фото": cola_img, "Название": food_base.at[7, "name"], "Состав": 'Вода, сахар, сок лайма, краситель, регулятор кислотности, ароматизатор, кофеин', "Цена": food_base.at[7, "price"]}
 tea_dict = {"Фото": tea_img, "Название": food_base.at[8, "name"], "Состав": 'Заварка, мята, темьян, апельсин, имбирь', "Цена": food_base.at[8, "price"]}
 water_dict = {"Фото": water_img, "Название": food_base.at[9, "name"], "Состав": 'Вода', "Цена": food_base.at[9, "price"]}
+
+dicts = [marg_dict, must_dict, clas_dict, phil_dict, cali_dict, lava_dict, cola_dict, tea_dict, water_dict]
