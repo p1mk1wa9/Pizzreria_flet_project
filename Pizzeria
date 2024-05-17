@@ -1,8 +1,15 @@
 import flet as ft
 import json
 import food_data
+import datetime
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import io
+import base64
 
-class Save:
+
+class SaveAcc:
     def __init__(self):
         self.dataclass = self.load_data()
 
@@ -18,21 +25,166 @@ class Save:
         with open('database.json', 'w') as file:
             json.dump(self.dataclass, file)
 
-food_box = {}
+class SavePrice:
+    def __init__(self):
+        self.dataprice = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('pricebase.json', 'r') as file:
+                dataprice = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dataprice = {}
+        return dataprice
+
+    def save_data(self):
+        with open('pricebase.json', 'w') as file:
+            json.dump(self.dataprice, file)
+
+class Save:
+    def __init__(self):
+        self.food_data = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('imagebase.json', 'r') as file:
+                datafood = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            datafood = {}
+        return datafood
+
+    def save_data(self):
+        for data in self.food_data:
+            if isinstance(data, ft.Image):
+                self.food_data[data] = data.src
+        with open('imagebase.json', 'w') as file:
+            json.dump(self.food_data, file)
+
+class SaveText:
+    def __init__(self):
+        self.textdata = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('foodbase.json', 'r') as file:
+                textclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            textclass = {}
+        return textclass
+
+    def save_data(self):
+        with open('foodbase.json', 'w+') as file:
+            json.dump(self.textdata, file)
+
+food_box = []
 def main(page: ft.Page):
-    save = Save()
+    save_img = Save()
+    save_text = SaveText()
+    save_acc = SaveAcc()
+    save_price = SavePrice()
     sign_status = False
 
-    nick_name = ft.TextField(label="Nickname", autofocus=True)
-    password = ft.TextField(label="Password", password=True, can_reveal_password=True)
+    page.scroll = "auto"
+
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    nick_name = ft.TextField(label="Nickname", autofocus=True, width=200)
+    password = ft.TextField(label="Password", password=True, can_reveal_password=True, width=200)
     greetings = ft.Column()
-    nick_info = ft.TextField(label="Your nickname", read_only=True, visible=True, width=500)
-    password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=True, width=500)
+    nick_info = ft.TextField(label="Your nickname", read_only=True, visible=True, width=200)
+    password_info = ft.TextField(label="Your password", read_only=True, password=True, can_reveal_password=True, visible=True, width=200)
 
-
+    # must_cube = ft.Container(
+    #     content=ft.Image(src=food_data.must_img), width=250, height=250, bgcolor="transparent", border_radius=10, offset=(-3, 0), animate_opacity=ft.animation.Animation(300),
+    # )
+    # phil_cube = ft.Container(
+    #     content=ft.Image(src=food_data.phil_img), width=250, height=250, bgcolor="transparent", border_radius=10,offset=(-1, 0),
+    #     animate_opacity=ft.animation.Animation(300),
+    # )
+    # cali_cube = ft.Container(
+    #     content=ft.Image(src=food_data.cali_img), width=250, height=250, bgcolor="transparent", border_radius=10,offset=(1, 0),
+    #     animate_opacity=ft.animation.Animation(300),
+    # )
+    # cola_cube = ft.Container(
+    #     content=ft.Image(src=food_data.cola_img), width=250, height=250, bgcolor="transparent", border_radius=10,offset=(3, 0),
+    #     animate_opacity=ft.animation.Animation(300),
+    # )
+    #
+    #
+    # a = ft.Container(
+    #     content=ft.Text(" EVERY", color="white", italic=True, size=30, weight=ft.FontWeight.BOLD), width=100, height=45, bgcolor="blue", border_radius=10, offset=ft.transform.Offset(-11, 0), animate_offset=ft.animation.Animation(700),
+    # )
+    # b = ft.Container(
+    #     content=ft.Text("THING", color="white", italic=True, size=30, weight=ft.FontWeight.BOLD), width=100, height=45,
+    #     bgcolor="red", border_radius=10, offset=ft.transform.Offset(11, -1.22),
+    #     animate_offset=ft.animation.Animation(700),
+    # )
+    # c = ft.Container(
+    #     content=ft.Text("     for you", color="white", italic=True, size=35), width=200, height=55, bgcolor="green", border_radius=10, offset=ft.transform.Offset(11, -1.22), animate_offset=ft.animation.Animation(700),
+    # )
+    # d = ft.Container(gradient=ft.LinearGradient(
+    #     begin=ft.alignment.center_left,
+    #     end=ft.alignment.center_right,
+    #    colors=[ft.colors.BLUE, ft.colors.PINK],
+    # ),
+    #     content=ft.Text(" Pizza Prime", color="white", italic=True, size=50, weight=ft.FontWeight.BOLD), width=300, height=80, bgcolor="yellow", border_radius=10, animate_opacity=300,
+    # )
+    # d.opacity = 0
+    #
+    # def animate_0(e):
+    #     must_cube.opacity = 1 if must_cube.opacity == 0 else 0
+    #     must_cube.update()
+    #     time.sleep(1)
+    #     phil_cube.opacity = 1 if phil_cube.opacity == 0 else 0
+    #     phil_cube.update()
+    #     time.sleep(1)
+    #     cali_cube.opacity = 1 if cali_cube.opacity == 0 else 0
+    #     cali_cube.update()
+    #     time.sleep(1)
+    #     cola_cube.opacity = 1 if cola_cube.opacity == 0 else 0
+    #     cola_cube.update()
+    #
+    # def animate(e):
+    #     a.offset = ft.transform.Offset(-0.5, 0)
+    #     a.update()
+    #     b.offset = ft.transform.Offset(0.5, -1.22)
+    #     b.update()
+    #     c.offset = ft.transform.Offset(0, -1.16)
+    #     c.update()
+    #     d.opacity = 1 if d.opacity == 0 else 0
+    #     d.update()
+    #
+    # page.add(
+    #     must_cube,
+    # )
+    # time.sleep(1)
+    # page.add(
+    #     phil_cube,
+    # )
+    # time.sleep(1)
+    # page.add(
+    #     cali_cube,
+    # )
+    # time.sleep(1)
+    # page.add(
+    #     cola_cube,
+    # )
+    #
+    # page.add(
+    #     a,
+    #     b,
+    #     c,
+    #     d,
+    # )
+    # if __name__ == "__main__":
+    #     time.sleep(1)
+    #     animate_0(e=page)
+    #     time.sleep(3)
+    #     animate(e=page)
     def reg(e):
-        save.dataclass[nick_name.value] = password.value
-        save.save_data()
+        save_acc.dataclass[nick_name.value] = password.value
+        save_acc.save_data()
         greetings.controls.append(ft.Text(f"You are registered as {nick_name.value}!"))
         nick_name.value = ""
         password.value = ""
@@ -40,10 +192,12 @@ def main(page: ft.Page):
         nick_name.focus()
 
     def sign_in(e):
-        if nick_name.value in save.dataclass and save.dataclass[nick_name.value] == password.value:
+        if nick_name.value in save_acc.dataclass and save_acc.dataclass[nick_name.value] == password.value:
             profile(e)
             nick_info.value = str(nick_name.value)
             password_info.value = str(password.value)
+        elif nick_name.value == "admin" and password.value == "admin_panel_run":
+            admin(e)
         else:
             greetings.controls.append(ft.Text("Incorrect nickname or password!"))
             nick_name.value = ""
@@ -90,26 +244,64 @@ def main(page: ft.Page):
 
     def plus_food(food_dict):
         global food_box
-        food_box["Название"] = food_dict.get("Название")
-        food_box["Цена"] = food_dict.get("Цена")
+        food_box.append(food_dict.get("Название"))
         food_price.value = str(int(food_price.value) + int(food_dict.get("Цена")))
-        print(food_price.value)
-        print(food_box)
-        page.update()
 
 
-    def minus_food(food_dict, food_price):
+    def minus_food(food_dict):
         if int(food_price.value) > 0:
-            food_price.value = str(int(food_price.value) - int(food_dict.get("Цена")))
+            if food_dict.get("Название") in food_box:
+                food_price.value = str(int(food_price.value) - int(food_dict.get("Цена")))
+                food_box.remove(food_dict.get("Название"))
+            else:
+                page.add(ft.Text("Вы не можете удалить это из корзины так как вы не добавляли это в корзину"))
 
-
-    def food_cart(e):
+    def clear_cart(e):
         page.controls.clear()
-        page.add(
-            food_price,
-            ft.ElevatedButton("Оформить заказ", on_click=lambda e:page.add(ft.Text("Списано" + food_price.value + "руб")))
-        )
+        page.add(ft.Text("Списано " + food_price.value + " руб"))
+        food_box.clear()
+        if save_price.dataprice.get(str(datetime.date.today())) != 0:
+            save_price.dataprice[str(datetime.date.today())] = int(save_price.dataprice.get(str(datetime.date.today()))) + int(food_price.value)
+            save_price.save_data()
+        else:
+            save_price.dataprice[str(datetime.date.today())] = int(food_price.value)
+            save_price.save_data()
+        food_price.value = "0"
         page.update()
+
+    def cart_delete(food_dict):
+        if int(food_price.value) > 0:
+            if food_dict.get("Название") in food_box:
+                food_price.value = str(int(food_price.value) - int(food_dict.get("Цена")))
+                food_box.remove(food_dict.get("Название"))
+            else:
+                page.add(ft.Text("Вы не можете удалить это из корзины так как вы не добавляли это в корзину"))
+
+    def b(food_dict):
+        fb = int(len(food_box))
+        for i in range(fb):
+            page.add(ft.Container(
+                ft.Row([
+                    ft.IconButton(icon=ft.icons.REMOVE, on_click=lambda e: cart_delete(food_dict)),
+                    ft.TextField(str(food_box[i]), read_only=True)
+                ])
+            ))
+        page.update()
+
+    def food_cart(food_dict):
+        page.controls.clear()
+        if int(food_price.value) == 0:
+            page.add(
+                ft.Text("Корзина пуста")
+            )
+            page.update()
+        else:
+            page.add(
+                food_price,
+                ft.ElevatedButton("Оформить заказ", on_click=lambda e: clear_cart(e=page))
+            )
+            b(food_dict=food_dict)
+            page.update()
 
 
     def food_description(food_dict):
@@ -120,12 +312,91 @@ def main(page: ft.Page):
             ft.Text("Название"), ft.Text(food_dict.get("Название")),
             ft.Text("Состав"), ft.Text(food_dict.get("Состав")),
             ft.Text("Цена"), ft.Text(food_dict.get("Цена")),
-            ft.IconButton(icon=ft.icons.REMOVE, on_click= lambda e: minus_food(food_dict, food_price)), ft.IconButton(icon=ft.icons.ADD, on_click= lambda e: plus_food(food_dict))
+            ft.IconButton(icon=ft.icons.ADD, on_click= lambda e: plus_food(food_dict))
         ])))
+        if food_dict.get("Название") in food_box:
+            page.add(ft.IconButton(icon=ft.icons.REMOVE, on_click= lambda e: minus_food(food_dict)))
 
     pizza_list = [ft.ElevatedButton("Маргарита", on_click=lambda e: food_description(food_data.marg_dict)), ft.ElevatedButton("Горчичная", on_click=lambda e: food_description(food_data.must_dict)), ft.ElevatedButton("Классическая", on_click=lambda e: food_description(food_data.clas_dict))]
     sushi_list = [ft.ElevatedButton("Филадельфия", on_click=lambda e: food_description(food_data.phil_dict)), ft.ElevatedButton("Калифорния", on_click=lambda e: food_description(food_data.cali_dict)), ft.ElevatedButton("Лава", on_click=lambda e: food_description(food_data.lava_dict))]
     drinks_list = [ft.ElevatedButton("Кола", on_click=lambda e: food_description(food_data.cola_dict)), ft.ElevatedButton("Чай", on_click=lambda e: food_description(food_data.tea_dict)), ft.ElevatedButton("Вода", on_click=lambda e: food_description(food_data.water_dict))]
+
+    def get_current_food_dict(index):
+        return food_data.dicts[index]
+
+    try:
+        page.add(ft.Image(save_img.food_data["Фото"]))
+    except KeyError:
+        page.add(ft.Text("Изображение пока недоступно"))
+
+    for data in save_text.textdata:
+        page.add(ft.Text(f"{data}: {save_text.textdata[data]}"))
+    page.update()
+
+    def add_food(e):
+        page.controls.clear()
+        name_food = ft.TextField(label="Введите название новой еды")
+        description_food = ft.TextField(label="Введите описание новой еды")
+        img_adress = ft.TextField(label="Вставьте путь до фотографии для нового еды")
+        price_food = ft.TextField(label="Введите цену")
+        img_food = ft.Image(src=img_adress.value, width=220, height=220, fit=ft.ImageFit.CONTAIN)
+        page.add(ft.Row([ft.Row(
+            [
+                img_food,
+            ],
+        ),
+            ft.Row(
+                [ft.Column([
+                    ft.Row(
+                        [ft.Text('     '), ft.Text(name_food.value), ]),
+                    ft.Row([
+                        ft.Container(ft.Text("")),
+                    ]),
+                    ft.Row([
+                        ft.Text(f'Описание:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
+                        ft.Text(description_food.value),
+                        ft.Text(f'Цена:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
+                        ft.Text(price_food.value),
+                    ]),
+                ], alignment=ft.MainAxisAlignment.START),
+                ], alignment=ft.MainAxisAlignment.SPACE_EVENLY),
+        ]))
+        save_img.food_data = {
+            "Фото": img_adress.value
+        }
+        save_img.save_data()
+        save_text.textdata = {
+            "name_shelter": name_food.value,
+            "adress_shelter": description_food.value
+        }
+        page.add(name_food, description_food, price_food, img_adress)
+
+    def admin(e):
+        page.controls.clear()
+        page.add(
+            ft.ElevatedButton("Добавить еду", on_click=add_food(e)),
+            ft.ElevatedButton("Изменить еду")
+        )
+
+    def buys(e):
+        page.controls.clear()
+        fig = Figure()
+        ax = fig.add_subplot(111)
+        x = list(save_price.dataprice.keys())
+        y = list(save_price.dataprice.values())
+        plt.plot(x, y)
+        plt.xlabel("Дни")
+        plt.ylabel("Руб")
+        plt.title("Ваши покупки")
+        ax.plot(x, y)
+        fig.tight_layout()
+        canvas = FigureCanvas(fig)
+        buf = io.BytesIO()
+        canvas.print_png(buf)
+        data = base64.b64encode(buf.getvalue()).decode('utf-8')
+        plot_image = ft.Image(src_base64=data, width=400)
+        page.controls.append(plot_image)
+        page.update()
 
     def profile(e):
         global sign_status
@@ -138,6 +409,8 @@ def main(page: ft.Page):
             greetings,
         )
 
+
+
         def on_destination_click(e):
             index = page.navigation_bar.selected_index
             if index == 0:
@@ -148,8 +421,10 @@ def main(page: ft.Page):
                 food_menu(e)
                 page.update()
             elif index == 2:
-                food_cart(e)
+                food_cart(get_current_food_dict(index))
                 page.update()
+            elif index == 3:
+                buys(e)
 
 
             greetings.controls.clear()
@@ -159,7 +434,8 @@ def main(page: ft.Page):
             destinations=[
                 ft.NavigationDestination(icon=ft.icons.ACCOUNT_CIRCLE, label="Аккаунт"),
                 ft.NavigationDestination(icon=ft.icons.FLATWARE, label="Заказать еду"),
-                ft.NavigationDestination(icon=ft.icons.SHOPPING_CART, label="Корзина"),
+                ft.NavigationDestination(icon=ft.icons.SHOPPING_CART_OUTLINED, label="Корзина"),
+                ft.NavigationDestination(icon=ft.icons.SHOPPING_CART, label="Ваши покупки"),
             ]
         )
         greetings.controls.append(ft.Text(f"You are signed in as {nick_name.value}!"))
@@ -172,4 +448,4 @@ def main(page: ft.Page):
         ft.ElevatedButton("Sign in?", on_click=sign_in),
         greetings,
     )
-ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+ft.app(target=main)
