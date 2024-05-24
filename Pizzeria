@@ -61,6 +61,70 @@ class Save:
             json.dump(self.food_data, file)
 
 class SaveText:
+    def __init__(self):import flet as ft
+import json
+import food_data
+import datetime
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import io
+import base64
+import time
+
+
+class SaveAcc:
+    def __init__(self):
+        self.dataclass = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('database.json', 'r') as file:
+                dataclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dataclass = {}
+        return dataclass
+
+    def save_data(self):
+        with open('database.json', 'w') as file:
+            json.dump(self.dataclass, file)
+
+class SavePrice:
+    def __init__(self):
+        self.dataprice = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('pricebase.json', 'r') as file:
+                dataprice = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dataprice = {}
+        return dataprice
+
+    def save_data(self):
+        with open('pricebase.json', 'w') as file:
+            json.dump(self.dataprice, file)
+
+class Save:
+    def __init__(self):
+        self.food_data = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('imagebase.json', 'r') as file:
+                datafood = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            datafood = {}
+        return datafood
+
+    def save_data(self):
+        for data in self.food_data:
+            if isinstance(data, ft.Image):
+                self.food_data[data] = data.src
+        with open('imagebase.json', 'w') as file:
+            json.dump(self.food_data, file)
+
+class SaveText:
     def __init__(self):
         self.textdata = self.load_data()
 
@@ -76,13 +140,34 @@ class SaveText:
         with open('foodbase.json', 'w+') as file:
             json.dump(self.textdata, file)
 
+class DictSave:
+    def __init__(self):
+        self.dictdata = self.load_data()
+
+    def load_data(self):
+        try:
+            with open('dict_base.json', 'r') as file:
+                dictclass = json.load(file)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            dictclass = [list(food_data.dicts)]
+        return dictclass
+
+    def save_data(self):
+        with open('dict_base.json', 'w+') as file:
+            json.dump(self.dictdata, file)
+
+
+
 food_box = []
 def main(page: ft.Page):
     save_img = Save()
     save_text = SaveText()
     save_acc = SaveAcc()
     save_price = SavePrice()
+    save_dict = DictSave()
     sign_status = False
+
+
 
     page.scroll = "auto"
 
@@ -128,7 +213,7 @@ def main(page: ft.Page):
     #     end=ft.alignment.center_right,
     #    colors=[ft.colors.BLUE, ft.colors.PINK],
     # ),
-    #     content=ft.Text(" Pizza Prime", color="white", italic=True, size=50, weight=ft.FontWeight.BOLD), width=300, height=80, bgcolor="yellow", border_radius=10, animate_opacity=300,
+    #     content=ft.Text(" God of pizza", color="white", italic=True, size=50, weight=ft.FontWeight.BOLD), width=300, height=80, bgcolor="yellow", border_radius=10, animate_opacity=300,
     # )
     # d.opacity = 0
     #
@@ -269,20 +354,19 @@ def main(page: ft.Page):
         food_price.value = "0"
         page.update()
 
-    def cart_delete(food_dict):
-        if int(food_price.value) > 0:
-            if food_dict.get("Название") in food_box:
-                food_price.value = str(int(food_price.value) - int(food_dict.get("Цена")))
-                food_box.remove(food_dict.get("Название"))
-            else:
-                page.add(ft.Text("Вы не можете удалить это из корзины так как вы не добавляли это в корзину"))
+    def find_dictionary(dictionaries, key, value):
+        for dictionary in dictionaries:
+            if key in dictionary and dictionary[key] == value:
+                return dictionary
+        return None
+
 
     def b(food_dict):
         fb = int(len(food_box))
         for i in range(fb):
             page.add(ft.Container(
                 ft.Row([
-                    ft.IconButton(icon=ft.icons.REMOVE, on_click=lambda e: cart_delete(food_dict)),
+                    ft.IconButton(icon=ft.icons.REMOVE, on_click=lambda e: minus_food(food_dict=find_dictionary(food_data.dicts, "Название", food_dict.get("Название")))),
                     ft.TextField(str(food_box[i]), read_only=True)
                 ])
             ))
@@ -327,56 +411,50 @@ def main(page: ft.Page):
     try:
         page.add(ft.Image(save_img.food_data["Фото"]))
     except KeyError:
-        page.add(ft.Text("Изображение пока недоступно"))
+        page.add(ft.Text(""))
 
     for data in save_text.textdata:
         page.add(ft.Text(f"{data}: {save_text.textdata[data]}"))
     page.update()
 
-    def add_food(e):
+    def admin(e):
         page.controls.clear()
         name_food = ft.TextField(label="Введите название новой еды")
         description_food = ft.TextField(label="Введите описание новой еды")
-        img_adress = ft.TextField(label="Вставьте путь до фотографии для нового еды")
+        img_adress = ft.TextField(label="Вставьте путь до фотографии для новой еды")
         price_food = ft.TextField(label="Введите цену")
-        img_food = ft.Image(src=img_adress.value, width=220, height=220, fit=ft.ImageFit.CONTAIN)
-        page.add(ft.Row([ft.Row(
-            [
-                img_food,
-            ],
-        ),
-            ft.Row(
-                [ft.Column([
-                    ft.Row(
-                        [ft.Text('     '), ft.Text(name_food.value), ]),
-                    ft.Row([
-                        ft.Container(ft.Text("")),
-                    ]),
-                    ft.Row([
-                        ft.Text(f'Описание:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
-                        ft.Text(description_food.value),
-                        ft.Text(f'Цена:', theme_style=ft.TextThemeStyle.TITLE_SMALL),
-                        ft.Text(price_food.value),
-                    ]),
-                ], alignment=ft.MainAxisAlignment.START),
-                ], alignment=ft.MainAxisAlignment.SPACE_EVENLY),
-        ]))
-        save_img.food_data = {
-            "Фото": img_adress.value
-        }
-        save_img.save_data()
-        save_text.textdata = {
-            "name_shelter": name_food.value,
-            "adress_shelter": description_food.value
-        }
-        page.add(name_food, description_food, price_food, img_adress)
+        type_food = ft.TextField(label="Введите тип еды (Пицца, Суши, Напиток)")
+        def new_food(e):
+            new_dict = {"Фото": img_adress.value, "Название": name_food.value, "Состав": description_food.value, "Цена": price_food.value}
+            if type_food.value == "Пицца":
+                pizza_list.append(ft.ElevatedButton(str(name_food.value), on_click=lambda e: food_description(new_dict)))
+            elif type_food.value == "Суши":
+                sushi_list.append(ft.ElevatedButton(str(name_food.value), on_click=lambda e: food_description(new_dict)))
+            elif type_food.value == "Напиток":
+                drinks_list.append(ft.ElevatedButton(str(name_food.value), on_click=lambda e: food_description(new_dict)))
+            save_img.food_data = {
+                "Фото": img_adress.value
+            }
+            save_img.save_data()
+            save_text.textdata = {
+                "name_food": name_food.value,
+                "description_food": description_food.value,
+                "price_food": price_food.value
+            }
+            save_text.save_data()
 
-    def admin(e):
-        page.controls.clear()
+            def append_data(self, key, value):
+                self.dictdata.append({key: value})
+                self.save_data()
+
+            save_dict.save_data()
+        page.add(name_food, description_food, price_food, img_adress, type_food)
+
         page.add(
-            ft.ElevatedButton("Добавить еду", on_click=add_food(e)),
+            ft.ElevatedButton("Добавить еду", on_click=new_food(e)),
             ft.ElevatedButton("Изменить еду")
         )
+        page.update()
 
     def buys(e):
         page.controls.clear()
