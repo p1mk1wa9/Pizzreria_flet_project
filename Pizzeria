@@ -9,69 +9,6 @@ import io
 import base64
 
 
-class SaveAcc:
-    def __init__(self):
-        self.dataclass = self.load_data()
-
-    def load_data(self):
-        try:
-            with open('database.json', 'r') as file:
-                dataclass = json.load(file)
-        except (FileNotFoundError, json.decoder.JSONDecodeError):
-            dataclass = {}
-        return dataclass
-
-    def save_data(self):
-        with open('database.json', 'w') as file:
-            json.dump(self.dataclass, file)
-
-class SavePrice:
-    def __init__(self):
-        self.dataprice = self.load_data()
-
-    def load_data(self):
-        try:
-            with open('pricebase.json', 'r') as file:
-                dataprice = json.load(file)
-        except (FileNotFoundError, json.decoder.JSONDecodeError):
-            dataprice = {}
-        return dataprice
-
-    def save_data(self):
-        with open('pricebase.json', 'w') as file:
-            json.dump(self.dataprice, file)
-
-class Save:
-    def __init__(self):
-        self.food_data = self.load_data()
-
-    def load_data(self):
-        try:
-            with open('imagebase.json', 'r') as file:
-                datafood = json.load(file)
-        except (FileNotFoundError, json.decoder.JSONDecodeError):
-            datafood = {}
-        return datafood
-
-    def save_data(self):
-        for data in self.food_data:
-            if isinstance(data, ft.Image):
-                self.food_data[data] = data.src
-        with open('imagebase.json', 'w') as file:
-            json.dump(self.food_data, file)
-
-class SaveText:
-    def __init__(self):import flet as ft
-import json
-import food_data
-import datetime
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import io
-import base64
-import time
-
 
 class SaveAcc:
     def __init__(self):
